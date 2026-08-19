@@ -48,5 +48,10 @@ export async function proxy(request: NextRequest) {
 export const config = {
   // Everything except static assets, images, and API routes (API routes
   // authorize themselves via guardBroker()/the webhook shared secret).
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+  // The file-extension exclusion covers public/ assets like logo.png —
+  // without it, the proxy 307s the image request itself and next/image
+  // fails trying to decode a redirect as image data.
+  matcher: [
+    "/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:png|jpg|jpeg|gif|svg|webp|ico)$).*)",
+  ],
 };
