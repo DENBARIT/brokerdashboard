@@ -46,7 +46,7 @@ export async function getOrder(id: string): Promise<OrderRow | null> {
 export async function decideOrder(
   id: string,
   decision: "placed" | "rejected",
-  brokerId: string,
+  brokerId: string | null,
 ): Promise<OrderRow> {
   const admin = createAdminClient();
   const { data, error } = await admin

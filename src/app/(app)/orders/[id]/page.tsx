@@ -88,8 +88,9 @@ export default async function OrderDetailPage({
             Decision
           </h2>
           <p className="mb-3 text-sm text-neutral-500 dark:text-neutral-400">
-            The SMS match above is advisory — review it, then place the order
-            in the market or reject it.
+            A clean SMS match approves an order automatically, so this one
+            is still waiting on you — review any SMS above, then place the
+            order in the market or reject it.
           </p>
           <OrderActions orderId={order.id} />
         </Card>

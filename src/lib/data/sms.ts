@@ -1,7 +1,7 @@
 import "server-only";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { SmsMessageRow } from "@/lib/supabase/types";
-import { listPendingOrders } from "./orders";
+import { decideOrder, listPendingOrders } from "./orders";
 import { findMatch } from "@/lib/matching";
 
 /** Newest-first. */
@@ -20,10 +20,11 @@ export async function listSmsMessages(): Promise<SmsMessageRow[]> {
  * Matches [rawText] against currently pending orders and logs the result.
  * Shared by the manual paste-in form (POST /api/sms/ingest, broker-session
  * authorized) and the webhook stub (POST /api/sms/webhook, shared-secret
- * authorized) — see birr_gebeya/migrations/004_broker_dashboard.sql. The
- * match is advisory: it does not move the order out of
- * pending_verification by itself, a broker still has to click Approve on
- * /orders/[id].
+ * authorized) — see birr_gebeya/migrations/004_broker_dashboard.sql. A
+ * clean "matched" result (amount, name, and asset all line up) is treated
+ * as verification and auto-approves the order — see decideOrder() below.
+ * "mismatched"/"unmatched" results still leave the order in
+ * pending_verification for a broker to review manually on /orders/[id].
  */
 export async function ingestSms(
   rawText: string,
@@ -48,5 +49,15 @@ export async function ingestSms(
     .select("*")
     .single<SmsMessageRow>();
   if (error) throw new Error(error.message);
+
+  if (outcome.result === "matched" && matchedOrder) {
+    try {
+      await decideOrder(matchedOrder.id, "placed", brokerId);
+    } catch {
+      // The order may have already been decided (e.g. a broker acted on it
+      // manually moments earlier) — the SMS is still logged either way.
+    }
+  }
+
   return data;
 }

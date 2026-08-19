@@ -10,7 +10,7 @@ export default async function SmsPage() {
     <div>
       <PageHeader
         title="SMS Log"
-        description="No gateway is connected yet — paste each verification SMS as it arrives and it's matched against pending orders automatically."
+        description="No gateway is connected yet — paste each verification SMS as it arrives. A clean match (amount, buyer, and asset all line up) approves the order automatically; anything less needs your review on the order page."
       />
 
       <Card className="mb-6">
