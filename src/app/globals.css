@@ -3,6 +3,16 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  --chart-surface: #fcfcfb;
+  --chart-text-primary: #0b0b0b;
+  --chart-text-secondary: #52514e;
+  --chart-muted: #898781;
+  --chart-grid: #e1e0d9;
+  --chart-axis: #c3c2b7;
+  --series-blue: #2a78d6;
+  --series-orange: #eb6834;
+  --series-aqua: #1baf7a;
 }
 
 @theme inline {
@@ -16,6 +26,16 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+
+    --chart-surface: #1a1a19;
+    --chart-text-primary: #ffffff;
+    --chart-text-secondary: #c3c2b7;
+    --chart-muted: #898781;
+    --chart-grid: #2c2c2a;
+    --chart-axis: #383835;
+    --series-blue: #3987e5;
+    --series-orange: #d95926;
+    --series-aqua: #199e70;
   }
 }
 

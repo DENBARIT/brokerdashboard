@@ -20,6 +20,18 @@ export async function listPendingOrders(): Promise<OrderRow[]> {
   return data ?? [];
 }
 
+/** Every order regardless of status — feeds the Orders page stats/chart. */
+export async function listAllOrders(): Promise<OrderRow[]> {
+  const admin = createAdminClient();
+  const { data, error } = await admin
+    .from("orders")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .returns<OrderRow[]>();
+  if (error) throw new Error(error.message);
+  return data ?? [];
+}
+
 export async function getOrder(id: string): Promise<OrderRow | null> {
   const admin = createAdminClient();
   const { data, error } = await admin

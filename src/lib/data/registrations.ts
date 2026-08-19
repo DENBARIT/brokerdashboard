@@ -6,13 +6,17 @@ import type { ProfileRow } from "@/lib/supabase/types";
 // own these rows, so bypassing RLS is required (mirrors admin-dashboard's
 // lib/data/users.ts).
 
-/** Oldest-first — a broker works this like a queue. */
-export async function listPendingRegistrations(): Promise<ProfileRow[]> {
+/**
+ * All registrations, oldest-first. The registrations page splits this into
+ * pending (worked like a queue) and already-issued sections — brokers still
+ * need to reach an active profile's detail page to update its CSD account
+ * number, so issued accounts can't just drop off the list.
+ */
+export async function listRegistrations(): Promise<ProfileRow[]> {
   const admin = createAdminClient();
   const { data, error } = await admin
     .from("profiles")
     .select("*")
-    .eq("csd_account_status", "pending")
     .order("created_at", { ascending: true })
     .returns<ProfileRow[]>();
   if (error) throw new Error(error.message);
